@@ -90,8 +90,10 @@ bool Adafruit_MPU6050::begin(uint8_t i2c_address, TwoWire *wire,
   Adafruit_BusIO_Register chip_id =
       Adafruit_BusIO_Register(i2c_dev, MPU6050_WHO_AM_I, 1);
 
-  // make sure we're talking to the right chip
-  if (chip_id.read() != MPU6050_DEVICE_ID) {
+  const uint8_t chipId = chip_id.read();
+
+  // Some parts sold as MPU-6050 report 0x70 while remaining register-compatible.
+  if (chipId != MPU6050_DEVICE_ID && chipId != MPU6050_DEVICE_ID_ALT) {
     return false;
   }
 
